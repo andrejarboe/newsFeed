@@ -18,8 +18,20 @@ var app = express();
 // Routes
 app.get("/scrape", function(req, res) {
     // First, we grab the body of the html with request
-    axios.get("http://www.echojs.com/").then(function(response){
+    axios.get("http://www.npr.org/").then(function(response){
       console.log(response);
+      // Then, we load that into cheerio and save it to $ for a shorthand selector
+      var $ = cheerio.load(response.data);
+
+      $(".title").each(function(i, element){
+        var result = {};
+        
+        result.title = $(this).text();
+        console.log(result);
+      });
+
+      // If we were able to successfully scrape and save an Article, send a message to the client
+      res.send("Scrape Complete");
     });
     
 });
